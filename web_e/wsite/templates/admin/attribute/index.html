@@ -1,0 +1,87 @@
+{% extends "../base_admin.html" %}
+{% block title %}{{ title }}{% endblock title %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center py-2">{{ title }}</h1>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <a href="{% url 'attribute.create' %}" class="btn btn-primary">Add Attribute</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Attribute Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in attributes %}
+            <tr>
+                <th scope="row">{{ data.id }}</th>
+                <td>{{ data.att_name }}</td>
+                <td>{{ data.category }}</td>
+                <td>
+                    <a href="{% url 'attribute.edit' data.id %}" class="btn btn-sm btn-info mr-2" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="{{ data.id }}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <form id="deleteForm-{{ data.id }}" action="{% url 'attribute.delete' data.id %}" method="post" class="d-none">
+                        {% csrf_token %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-btn').on('click', function() {
+            var attributeId = $(this).data('id');
+            var form = $('#deleteForm-' + attributeId);
+
+            if (confirm("Are you sure you want to delete this attribute?")) {
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        $('#message').html(
+                            '<div class="alert alert-success alert-dismissible fade show" role="alert">Deleted successfully!</div>'
+                        );
+                        form.closest('tr').remove();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#message').html(
+                            '<div class="alert alert-danger alert-dismissible fade show" role="alert">An error occurred. Please try again.</div>'
+                        );
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+{% endblock %}

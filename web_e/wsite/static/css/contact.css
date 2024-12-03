@@ -1,0 +1,21 @@
+#success-message {
+    box-shadow: 0px 0px 10px rgba(0, 1, 0, 1);
+    border-radius: 20px;
+    background: #EADFB4;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+#success-message h3 {
+    text-align: center;
+}
+img.img_contact {
+    width: 100px;
+    margin-left: 123px;
+    height: 76px;
+}
+#success-message p {
+    font: -webkit-small-control;
+}

@@ -1,0 +1,60 @@
+{% extends "../base_admin.html" %}
+{% block title %}Discount Management{% endblock title %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Discount Management</h1>
+    <a href="{% url 'discount.create' %}" class="btn btn-primary mb-3">Create New Discount</a>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Discount Code</th>
+                <th scope="col">Discount Value</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in discounts %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ data.code }}</td>
+                <td>{{ data.discount_value }}%</td>
+                <td>{{ data.quantity }}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Discount Actions" style="gap:10px;">
+                        <a href="{% url 'discount.edit' data.id %}" class="btn btn-info btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
+                        <button type="button" class="btn btn-danger btn-sm delete-discount-btn" data-discount-id="{{ data.id }}" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-discount-btn').click(function() {
+            var discountId = $(this).data('discount-id');
+            if (confirm('Are you sure you want to delete this discount?')) {
+                $.ajax({
+                    url: '{% url "discount.delete" 0 %}'.replace('0', discountId),
+                    method: 'POST',
+                    data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+                    success: function(response) {
+                        // Remove the row from the table
+                        $('tr[data-discount-id="' + discountId + '"]').remove();
+                        // Optionally, show a success message or handle other UI updates
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Optionally, show an error message or handle error UI updates
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

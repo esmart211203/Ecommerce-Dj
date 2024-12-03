@@ -1,0 +1,66 @@
+{% extends "../base_admin.html" %}
+{% block title %}{{title}}{% endblock title %}{{title}}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Classify Feedback</h1>
+    
+    <div class="mb-3">
+        <label for="classifySelect" class="form-label">Filter by Classification</label>
+        <select id="classifySelect" class="form-select form-select-lg" onchange="filterTable()">
+            <option value="">All</option>
+            <option value="positive">Positive</option>
+            <option value="negative">Negative</option>
+            <option value="neutral">Neutral</option>
+        </select>
+    </div>
+    
+
+    <table class="table" id="feedbackTable">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th>User</th>
+                <th>Comment</th>
+                <th>Classify</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for classify in classifies %}
+            <tr>
+                <td scope="row">{{classify.id}}</td>
+                <td>{{classify.product_rating.author}}</td>
+                <td>{{classify.product_rating.comment}}</td>
+                <td>{{classify.classify}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function filterTable() {
+        // Lấy giá trị từ dropdown
+        const select = document.getElementById('classifySelect');
+        const filter = select.value.toLowerCase(); // Chuyển đổi về chữ thường
+        const table = document.getElementById('feedbackTable');
+        const trs = table.getElementsByTagName('tr');
+
+        // Lặp qua tất cả các hàng trong bảng
+        for (let i = 1; i < trs.length; i++) { // Bỏ qua hàng đầu tiên (thead)
+            const tds = trs[i].getElementsByTagName('td');
+            if (tds.length > 0) {
+                // Kiểm tra xem có đủ cột không
+                if (tds.length >= 4) {
+                    const classifyText = tds[3].textContent || tds[3].innerText; // Lấy nội dung của cột Classify
+                    // Kiểm tra nếu giá trị trong dropdown có trong cột Classify
+                    trs[i].style.display = (filter === '' || classifyText.toLowerCase() === filter) ? '' : 'none';
+                } else {
+                    console.warn('Không đủ cột trong hàng: ', trs[i]);
+                }
+            }
+        }
+    }
+</script>
+
+
+{% endblock content %}

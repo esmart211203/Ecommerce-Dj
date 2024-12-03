@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+    img#img_2 {
+    width: 720px;
+    height: 249px;
+    display: block;
+    margin: 0 auto;
+}
+
+    .bg-successs{
+        background-image: url(../static/img/voucher1.png);
+        background-size: cover;
+        background-position: center;
+    }
+    .sales{
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+    .sales li{
+        text-decoration: none;
+        list-style: none;
+    }
+    img.img_sales {
+    height: 50px;
+    width: 200px;
+    }
+    #img_hotvoucher{
+        display: block;
+        margin: 0 auto;
+    }
+    .services-icon-waps button img {
+    max-width: 100%;
+    height: auto;
+    display: block; 
+    margin: 0 auto;
+}
+    .row button{
+        border: none;
+    }
+    .services-icon-waps{
+        border-radius: 10px;
+    }
+    #img_vouchervip{
+        display: block;
+        margin: 0 auto;
+    }
+    .metal img{
+        border: 5px solid #ffff;
+        border-radius: 20px;
+        margin-top: 5px;
+    }
+    #img_voucher300{
+        height: 215px;
+    }
+    img.card-img-top {
+        margin-top: 10px;
+    }
+    a.btn.btn-primary {
+        align-items: center;
+        display: flex;
+        height: 40px;
+        width: 230px;
+        justify-content: center;
+    }
+
+</style>
+<section class="bg-successs py-5">
+    <div class="container">
+        <div class="row align-items-center py-5">
+            <img src="../static/img/voucher2.png" alt="" id="img_1">
+            <img src="../static/img/voucher3.png" alt="" id="img_2">
+            <div class="sales">
+                <li><img src="../static/img/sale5.png" alt="" class="img_sales"></li>
+                <li><img src="../static/img/sale15.png" alt="" class="img_sales"></li>
+                <li><img src="../static/img/sale30.png" alt=""class="img_sales"></li>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Close Banner -->
+
+<!-- Start Section -->
+<section class="bg-red container py-5">
+    <div class="row text-center pt-5 pb-3">
+        <img src="../static/img/hotvoucher.png" alt="" id="img_hotvoucher">
+    </div>
+    <div class="row" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch;">
+        <div class="card" style="width: 18rem; margin: 10px;">
+            <img src="../static/img/magiam15.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Nhập Mã : VN15  <br>Giảm 15%</h5>
+                <p class="card-text">
+                    Giảm tối đa ₫50k Đơn Tối Thiểu ₫220k</p>
+                <a href="#" class="btn btn-primary" onclick="copyToClipboard('VN15')">Lưu</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 18rem; margin: 10px;">
+            <img src="../static/img/magiam20.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Nhập Mã : VN20  <br>Giảm 20%</h5>
+                <p class="card-text">
+                    Giảm tối đa ₫100k Đơn Tối Thiểu ₫600k</p>
+                <a href="#" class="btn btn-primary" onclick="copyToClipboard('VN20')">Lưu</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem; margin: 10px;">
+            <img src="../static/img/magiam30.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Nhập Mã : VN30  <br>Giảm 30%</h5>
+                <p class="card-text">Giảm tối đa ₫200k Đơn Tối Thiểu ₫1200k</p>
+                <a href="#" class="btn btn-primary" onclick="copyToClipboard('VN30')">Lưu</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem; margin: 10px;">
+            <img src="../static/img/magiam50.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Nhập Mã : VN50  <br>Giảm 50%</h5>
+                <p class="card-text">Giảm tối đa ₫300k Đơn Tối Thiểu ₫1500k</p>
+                <a href="#" class="btn btn-primary" onclick="copyToClipboard('VN50')">Lưu</a>
+            </div>
+        </div>
+
+        
+    </div>
+    </div>
+</section>
+<!-- End Section -->
+
+<!-- Start Brands -->
+<section class="bg-light py-5">
+    <div class="bg-blacks container my-4">
+        <div class="row text-center py-3">
+            <div class="row text-center pt-5 pb-3">
+                <img src="../static/img/vouchervip.png" alt="" id="img_vouchervip">
+            </div>
+            <div class="container text-center">
+                <div class="row row-cols-2 ">
+                  <div class="metal col"><a href="http://127.0.0.1:8000/shop-category/21"><img src="../static/img/vip1.png" alt=""></a></div>
+                  <div class="metal col"><a href="http://127.0.0.1:8000/shop-category/15"><img src="../static/img/vip3.png" alt=""></a></div>
+                  <div class="metal col"><a href="http://127.0.0.1:8000/shop-category/22"><img src="../static/img/vip2.png" alt=""></a></div>
+                  <div class="metal col"><a href="http://127.0.0.1:8000/shop-category/18"><img src="../static/img/vip4.png" alt=""></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="bg-dark" id="tempaltemo_footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-success border-bottom pb-3 border-light logo">TechTrove
+                </h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    
+                    
+                    <li>
+                        <i class="fas fa-map-marker-alt fa-fw"></i>
+                        Cơ sở 1: 69/68 Đặng Thùy Trâm, P. 13, Q. Bình Thạnh, TP. HCM
+                    </li>
+                    <li>
+                        <i class="fa fa-phone fa-fw"></i>
+                        <a class="text-decoration-none" href="tel:010-020-0340">0827853846</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope fa-fw"></i>
+                        <a class="text-decoration-none" href="mailto:info@company.com">techtrove@company.com</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-light border-bottom pb-3 border-light">Chính sách</h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    <li><a class="text-decoration-none" href="#">Chính sách bảo hành</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách đổi trả</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách bảo mật</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách bán hàng</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách sử dụng</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách kiểm hàng</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-light border-bottom pb-3 border-light">TechTrove</h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    <li><a class="text-decoration-none" href="#">Home</a></li>
+                    <li><a class="text-decoration-none" href="/voucher">Khuyến Mãi</a></li>
+                    <li><a class="text-decoration-none" href="/shop">Mua Sắm</a></li>
+                    <li><a class="text-decoration-none" href="/contact">Liên Hệ</a></li>
+                    <li><a class="text-decoration-none" href="/gmaps">Bản Đồ</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="row text-light mb-4">
+            <div class="col-12 mb-3">
+                <div class="w-100 my-3 border-top border-light"></div>
+            </div>
+            <div class="col-auto me-auto">
+                <ul class="list-inline text-left footer-icons">
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-auto">
+                <label class="sr-only" for="subscribeEmail">Email address</label>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
+                    <div class="input-group-text btn-success text-light">Subscribe</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 bg-black py-3">
+        <div class="container">
+            <div class="row pt-2">
+                <div class="col-12">
+                    <p class="text-left text-light">
+                        Copyright &copy; 2024  TechTrove
+                        | Designed by <a rel="sponsored" href="#" target="_blank">TechTrove</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<script>
+    function copyToClipboard(code) {
+        // Tạo một thẻ input để lưu trữ tạm thời mã giảm giá
+        var tempInput = document.createElement("input");
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // Dành cho thiết bị di động
+
+        // Sao chép văn bản từ input tạm thời
+        document.execCommand("copy");
+
+        // Xóa thẻ input tạm thời
+        document.body.removeChild(tempInput);
+
+        // Thông báo cho người dùng
+        alert("Mã giảm giá " + code + " đã được lưu!");
+    }
+</script>
+{% endblock %}

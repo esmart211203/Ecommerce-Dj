@@ -1,0 +1,621 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+    .container {
+        width: 100%;
+        max-width: 1250px;
+        margin-top: 25px;
+    }
+    .container_flashsale {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .header_flashsale {
+        background: linear-gradient(180deg, #1AA6F7 0%, #2940B8 100%);
+        border-radius: 4px 4px 0px 0px;
+        color: #fff;
+        padding: 25px;
+        text-align: center;
+        font-size: 1.5em;
+        position: relative;
+    }
+    .timer {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    .timer div {
+        background-color: #fff;
+        color: black;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .products_flashsale {
+        background: linear-gradient(to right, #d5d5d5, #b7b2b2);
+        display: flex;
+        gap: 10px;
+        padding: 20px;
+        overflow-x: auto;
+    }
+    .product {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        flex: 0 0 300px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    .product:hover {
+        transform: scale(1.05);
+    }
+    .product img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .product .description {
+        font-size: 1em;
+        margin: 10px 0;
+    }
+    .product .price {
+        color: red;
+        font-weight: bold;
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+    .product .old-price {
+        text-decoration: line-through;
+        color: #888;
+        font-size: 0.9em;
+    }
+    .product .discount {
+        color: #28a745;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+    .product div {
+        margin: 5px 0;
+    }
+    .footer_flashsale {
+        text-align: center;
+        padding: 10px;
+    }
+    .footer_flashsale button {
+        background-color: #1AA6F7;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s;
+    }
+    .description {
+        font-family: "SF Pro Display", 'Arial', sans-serif;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+    }
+    .price {
+        font-family: "SF Pro Display", 'Arial', sans-serif;
+
+    }
+    a.btn_inspect_sale {
+        font-family: sans-serif;
+    }
+    section.container.py-5 {
+        border-radius: 10px;
+        background: #F1F1F1;
+    }
+    .totlsale_plas {
+        height: 27px;
+        background: #EE4E4E;
+        width: 234px;
+        border-radius: 50px;
+    }
+
+</style>
+<style>
+    .image-container {
+        width: 200px; /* Đặt chiều rộng ảnh */
+        height: 200px; /* Đặt chiều cao ảnh */
+        overflow: hidden; /* Ẩn phần dư thừa nếu ảnh lớn hơn kích thước container */
+        position: relative; /* Đặt vị trí tương đối cho việc căn chỉnh ảnh */
+    }
+
+    .image-container img {
+        width: 75%; /* Chiếm toàn bộ chiều rộng của container */
+        height: auto; /* Duy trì tỷ lệ khung hình */
+        position: absolute; /* Đặt vị trí tuyệt đối để căn giữa ảnh */
+        top: 50%; /* Di chuyển ảnh lên trên 50% container */
+        left: 50%; /* Di chuyển ảnh sang trái 50% container */
+        transform: translate(-50%, -50%); /* Dịch chuyển ảnh để căn giữa */
+    }
+    .col-12 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .echbay-sms-messenger div.phonering-alo-zalo, 
+.echbay-sms-messenger div.phonering-alo-alo {
+	background-color:#0084ff
+}
+.echbay-sms-messenger div.phonering-alo-sms {
+	background-color:#f60
+}
+.echbay-sms-messenger div.phonering-alo-messenger {
+	background-color:#ffff
+}
+
+.echbay-sms-messenger {
+	width:53px
+}
+.echbay-sms-messenger a {
+	line-height:53px;
+    color: transparent;
+    display:block;
+}
+.echbay-sms-messenger {
+	display:block
+}
+.echbay-sms-messenger div.phonering-alo-zalo {
+	display: block
+}
+
+
+.echbay-sms-messenger div.phonering-alo-messenger {
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/800px-Instagram_logo_2022.svg.png);
+    ackground-color: #ffff;
+}
+.echbay-sms-messenger div.phonering-alo-zalo {
+    background-image: url(http://codfe.com/wp-content/uploads/2020/08/zalo.png);
+}
+.echbay-sms-messenger div.phonering-alo-sms {
+    background-image: url(http://codfe.com/wp-content/uploads/2020/08/mail.png);
+    background-color: #f60;
+    background-size: 60%;
+}
+.echbay-sms-messenger div {
+    margin: 14px 0;
+    background: #0084FF center no-repeat;
+    background-size: 70%;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px #888;
+}
+
+.echbay-sms-messenger {
+    text-align: center;
+    right:90px;
+    position: fixed;
+    bottom: 80px;
+    z-index: 999;
+}
+h5.text-center.mt-1.mb-1 {
+    font-size: 15px;
+}
+</style>
+<!-- Header -->
+<!-- Start Liên Hệ -->
+
+<div class="echbay-sms-messenger style-for-position-br">
+    <div class="phonering-alo-messenger">
+		<a href="https://www.instagram.com/ig_techtronic/" target="_blank" rel="nofollow" class="echbay-phonering-messenger-event">.</a>
+	</div>
+    <div class="phonering-alo-zalo">
+		<a href="https://zalo.me/0827853846" target="_blank" rel="nofollow" class="echbay-phonering-zalo-event">.</a>
+	</div>
+    <div class="phonering-alo-sms">
+        <a href="sms:0903123456" rel="nofollow" class="echbay-phonering-sms-event">.</a>
+    </div>
+    
+</div>
+<!-- End Liên Hệ -->
+
+<!-- END Header -->
+
+<!-- Close Header -->
+
+<!-- Modal -->
+
+<!-- Start Banner Hero -->
+<style>
+    img.caser_img {
+    margin-top: 20px;
+    width: 370px;
+    height: 200px;
+    }
+</style>
+<div class="container text-center">
+    <div class="row">
+      <div class="col-sm-8">
+        <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="active"></li>
+                <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1"></li>
+                <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row p-5">
+                            <img class="img-fluid" src="{% static "../static/img/banner1.webp" %}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row p-5">
+                            <img class="img-fluid" src="{% static "../static/img/banner2.webp" %}" alt="">
+                    </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container">
+                        <div class="row p-5">
+                            <img class="img-fluid" src="{% static "../static/img/banner3.webp" %}" alt="">
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev text-decoration-none w-auto ps-3" style="" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="prev">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="next">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        
+        </div>
+      </div>
+      <div class="col-sm-4" style="background: linear-gradient(to right, #d5d5d5, #f1f1f1);border-radius: 15px;">
+        <div class="container text-center">
+            <div class="row">
+              <div class="col-6 col-sm-3"><img class="caser_img" src="../static/img/caser1.webp"></div>
+              <!-- Force next columns to break to new line -->
+              <div class="w-100"></div>
+              <div class="col-6 col-sm-3"><img class="caser_img" src="../static/img/caser2.webp"></div>
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+</div>
+
+
+<!-- End Banner Hero -->
+<div class="container text-center">
+    <div class="row align-items-end" style="background: linear-gradient(to right, #d5d5d5, #f1f1f1);border-radius: 15px;">
+      <div class="col">
+        <div class="col-6 col-sm-3"><img class="caser_img" src="../static/img/caser4.webp"></div>
+      </div>
+      <div class="col">
+        <div class="col-6 col-sm-3"><img class="caser_img" src="../static/img/caser3.webp"></div>
+      </div>
+      <div class="col">
+        <div class="col-6 col-sm-3"><img class="caser_img" src="../static/img/caser5.webp"></div>
+      </div>
+    </div>
+  </div>
+<!-- Start Categories of The Month -->
+
+{% comment %} BEGIN FLASH SALE {% endcomment %}
+<style>
+    .totalsale_plas {
+        display: inline-block;
+        background: linear-gradient(to right, #e60000, #ff6666); /* Gradient background */
+        border-radius: 15px; /* Rounded corners */
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-family: 'Roboto', sans-serif;
+        position: relative;
+        width: 180px;
+    }
+    
+    .totalsale_plas .icon {
+        margin-right: 5px;
+    }
+    h4.incs_dmpv {
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+</style>
+<div class="container">
+    <div class="container_flashsale">
+        <div class="header_flashsale">
+            DEAL SỐC ĐỘC QUYỀN - BÁN CHẠY
+            <div class="timer" id="countdown">
+                <div id="days">2</div>
+                <div>:</div>
+                <div id="hours">14</div>
+                <div>:</div>
+                <div id="minutes">59</div>
+                <div>:</div>
+                <div id="seconds">31</div>
+            </div>
+        </div>
+        <div class="products_flashsale">
+            <div class="product">
+                <button type="button"  class="btn btn_button_flashslae"><a rel="sponsored" class="btn_link_fashslae" href="http://localhost:8000/detail-product/8" target="_blank" ;>
+                <img class="" src="{% static "img/FlashSale_png1.webp" %}" alt="">
+                <a><div class="description">Laptop ASUS Vivobook 14 OLED A1405ZA KM264W</div></a>
+                <div class="price">19.000,000 VND</div>
+                <div class="old-price">2.390.000 VND</div>
+                <div class="discount">Sale -23%</div>
+                <div class="totalsale_plas">
+                    <span class="icon">🔥</span>
+                    Đã bán: 21
+                </div>
+                </a>
+                </button> 
+            </div>
+
+            <div class="product">
+                <button type="button"  class="btn btn_button_flashslae"><a rel="sponsored" class="btn_link_fashslae" href="http://localhost:8000/detail-product/10" target="_blank" ;>
+                <img class="" src="{% static "img/FlashSale_png2.webp" %}" alt="">
+                <a><div class="description">Laptop ASUS Zenbook 14 OLED UM3402YA KM405W</div></a>
+                <div class="price">18.000,000 VND</div>
+                <div class="old-price">2.000.000 VND</div>
+                <div class="discount">Sale -20%</div>
+                <div class="totalsale_plas">
+                    <span class="icon">🔥</span>
+                    Đã bán: 60
+                </div>
+                </a>
+                </button> 
+            </div>
+
+            
+
+
+            <div class="product">
+                <button type="button"  class="btn btn_button_flashslae"><a rel="sponsored" class="btn_link_fashslae" href="http://localhost:8000/detail-product/27" target="_blank" ;>
+                <img class="" src="{% static "img/FlashSale_png4.webp" %}" alt="">
+                <a><div class="description">Chuột Logitech G502 X Plus LightSpeed White
+                </div></a>
+                <div class="price">3.290,000 VND</div>
+                <div class="old-price">200.000 VND</div>
+                <div class="discount">Sale -15%</div>
+                <div class="totalsale_plas">
+                    <span class="icon">🔥</span>
+                    Đã bán: 34
+                </div>
+                </a>
+                </button> 
+            </div>
+
+
+
+            <div class="product">
+                <button type="button"  class="btn btn_button_flashslae"><a rel="sponsored" class="btn_link_fashslae" href="http://localhost:8000/detail-product/33" target="_blank" ;>
+                <img class="" src="{% static "img/FlashSale_png5.webp" %}" alt="">
+                <a><div class="description">Ghế Gaming E-Dra Dignity EGC234 Red
+                </div></a>
+                <div class="price">1.690,000 VND</div>
+                <div class="old-price">2.390.000 VND</div>
+                <div class="discount">Sale -20%</div>
+                <div class="totalsale_plas">
+                    <span class="icon">🔥</span>
+                    Đã bán: 12
+                </div>
+                </a>
+                </button> 
+            </div>
+
+            <div class="product">
+                <button type="button"  class="btn btn_button_flashslae"><a rel="sponsored" class="btn_link_fashslae" href="http://127.0.0.1:8000/detail-product/18" target="_blank" ;>
+                <img class="" src="{% static "img/FlashSale_png3.webp" %}" alt="">
+                <a><div class="description">Tai nghe Steelseries Arctis Nova 7 Dragon Edition</div></a>
+                <div class="price">4.790,000 VND</div>
+                <div class="old-price">400.000 VND</div>
+                <div class="discount">Sale -30%</div>
+                <div class="totalsale_plas">
+                    <span class="icon">🔥</span>
+                    Đã bán: 23
+                </div>
+                </a>
+                </button> 
+            </div>
+        </div>
+        <div class="footer_flashsale">
+            <button><a class="btn_inspect_sale" href="http://127.0.0.1:8000/shop" target="_blank" style="; color:#fbf8f8;text-decoration: none;">Xem thêm khuyến mãi</a></button>
+        </div>
+    </div>
+</div>
+
+{% comment %} END FLASH SALE {% endcomment %}
+
+<section class="container py-5">
+    <h4 class="incs_dmpv" style=""> Danh Mục Phổ Biến
+    </h4>
+    <div class="row">
+        {% for cate in  categories %}
+        <div class="col-12 col-md-2 p-1 mt-2 mb-1">
+            <div class="image-container">
+                <a href="{% url "shop.category" cate.id %}"><img src="media/{{cate.image}}" class="rounded-circle img-fluid border"></a>
+            </div>
+            <h5 class="text-center mt-1 mb-2">{{cate.name}}</h5>
+        </div>  
+   
+        {% endfor %}
+    </div>
+    <div class="footer_flashsale">
+        <button><a class="btn_inspect_sale" href="http://127.0.0.1:8000/shop" target="_blank" style="; color:#fbf8f8;text-decoration: none;">Xem thêm</a></button>
+    </div>
+</section>
+<!-- End Categories of The Month -->
+
+
+<!-- Start Featured Product -->
+<section class="bg-light">
+    <div class="container py-5">
+        <div class="row py-3">
+            <h4 class="incs_dmpv" style=""> Sản Phẩm Phổ Biến
+            </h4>
+        </div>
+        <div class="row">
+            {% for data in products %}
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="{% url "product.detail" data.id %}">
+                        <img src="{{data.get_first_image.url}}" class="card-img-top" style="
+                        object-fit: cover;
+                        height: 300px;
+                        width: 300px;" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <ul class="list-unstyled d-flex justify-content-between">
+                            <li>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                            </li>
+                            <li class="text-muted text-right">{{data.get_price}} VND</li>
+                        </ul>
+                        
+                        <a href="{% url "product.detail" data.id %}" class="h6 text-decoration-none text-dark">{{data.name}}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- End Featured Product -->
+
+
+<!-- Start Footer -->
+<footer class="bg-dark" id="tempaltemo_footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-success border-bottom pb-3 border-light logo">TechTrove
+                </h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    
+                    
+                    
+                    <li>
+                        <i class="fas fa-map-marker-alt fa-fw"></i>
+                        Cơ sở 1: 69/68 Đặng Thùy Trâm, P. 13, Q. Bình Thạnh, TP. HCM
+                    </li>
+                    <li>
+                        <i class="fa fa-phone fa-fw"></i>
+                        <a class="text-decoration-none" href="tel:010-020-0340">0827853846</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope fa-fw"></i>
+                        <a class="text-decoration-none" href="mailto:info@company.com">techtrove@company.com</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-light border-bottom pb-3 border-light">Chính sách</h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    <li><a class="text-decoration-none" href="#">Chính sách bảo hành</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách đổi trả</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách bảo mật</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách bán hàng</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách sử dụng</a></li>
+                    <li><a class="text-decoration-none" href="#">Chính sách kiểm hàng</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 pt-5">
+                <h2 class="h2 text-light border-bottom pb-3 border-light">TechTrove</h2>
+                <ul class="list-unstyled text-light footer-link-list">
+                    <li><a class="text-decoration-none" href="#">Home</a></li>
+                    <li><a class="text-decoration-none" href="/about">About Us</a></li>
+                    <li><a class="text-decoration-none" href="/shop">Shopping</a></li>
+                    <li><a class="text-decoration-none" href="/contact">Contact</a></li>
+                    <li><a class="text-decoration-none" href="/gmaps">Maps</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="row text-light mb-4">
+            <div class="col-12 mb-3">
+                <div class="w-100 my-3 border-top border-light"></div>
+            </div>
+            <div class="col-auto me-auto">
+                <ul class="list-inline text-left footer-icons">
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/ig_techtronic/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
+                    </li>
+                    <li class="list-inline-item border border-light rounded-circle text-center">
+                        <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-auto">
+                <label class="sr-only" for="subscribeEmail">Email address</label>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
+                    <div class="input-group-text btn-success text-light">Subscribe</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 bg-black py-3">
+        <div class="container">
+            <div class="row pt-2">
+                <div class="col-12">
+                    <p class="text-left text-light">
+                        Copyright &copy; 2024  TechTrove
+                        | Designed by <a rel="sponsored" href="#" target="_blank">TechTrove</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+    function startCountdown(duration, display) {
+        let timer = duration, days, hours, minutes, seconds;
+
+        setInterval(function () {
+            days = Math.floor(timer / (24 * 60 * 60));
+            hours = Math.floor((timer % (24 * 60 * 60)) / (60 * 60));
+            minutes = Math.floor((timer % (60 * 60)) / 60);
+            seconds = Math.floor(timer % 60);
+
+            display.querySelector('#days').textContent = days;
+            display.querySelector('#hours').textContent = hours < 10 ? "0" + hours : hours;
+            display.querySelector('#minutes').textContent = minutes < 10 ? "0" + minutes : minutes;
+            display.querySelector('#seconds').textContent = seconds < 10 ? "0" + seconds : seconds;
+
+            if (--timer < 0) {
+                timer = duration; // Restart the countdown
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        const countdownElement = document.getElementById('countdown');
+        const timeInSeconds = 2 * 24 * 60 * 60 + 14 * 60 * 60 + 59 * 60 + 31; // Initial countdown time (2 days, 14 hours, 59 minutes, 31 seconds)
+        startCountdown(timeInSeconds, countdownElement);
+    };
+</script>
+{% endblock content %}

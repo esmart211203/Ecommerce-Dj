@@ -1,0 +1,47 @@
+{% extends "../base_admin.html" %}
+{% block title %}User Management{% endblock title %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">User Management</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ data.username }}</td>
+                <td>{{ data.email }}</td>
+                <td>
+                    <span class="badge badge-primary">
+                        {% if data.is_superuser %}
+                            Admin
+                        {% else %}
+                            Customer
+                        {% endif %}
+                    </span>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'user.delete' data.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if users|length == 0 %}
+            <tr>
+                <td colspan="5" class="text-center">No users found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

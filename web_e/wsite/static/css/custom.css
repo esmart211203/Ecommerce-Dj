@@ -1,0 +1,19 @@
+/*
+Custom Css
+*/
+body {
+    background-color: red;
+}
+/* CSS for success message */
+
+.col.colslaysvnp.vp1 {
+    height: auto;
+    width: 15px;
+    background: antiquewhite;
+}
+.col.colslaysvnp.vp2 {
+    height: auto;
+    width: 15px;
+    background: antiquewhite;
+}
+

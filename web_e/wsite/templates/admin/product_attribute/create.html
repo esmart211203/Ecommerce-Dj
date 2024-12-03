@@ -1,0 +1,24 @@
+{% extends "../base_admin.html" %}
+{% block title %}Product page{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+    <div class="product_addatributes" style="text-align: center;"><h1>Edit product attributes<h1></div>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="productName">Product</label>
+          <input type="text" class="form-control" id="productName" value="{{ product.name }}" readonly>
+        </div>
+        <div class="form-group">
+            {% for attribute in attributes %}
+                <div class="form-group">
+                    <label for="attribute-{{ attribute.id }}">{{ attribute.att_name }}</label>
+                    <input type="text" class="form-control" id="attribute-{{ attribute.id }}"
+                     name="attribute_values[{{ attribute.id }}]" placeholder="Enter value for {{ attribute.att_name }}">
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Attribute</button>
+    </form>
+</div>
+{% endblock %}

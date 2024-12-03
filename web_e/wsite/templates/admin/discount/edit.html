@@ -1,0 +1,27 @@
+{% extends "../base_admin.html" %}
+{% block title %}{{ title }}{% endblock title %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">{{ title }}</h1>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'discount.edit' discount.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="discountCode">Discount Code</label>
+            <input type="text" class="form-control" id="discountCode" name="code" value="{{ discount.code }}" placeholder="Enter discount code" required>
+        </div>
+        <div class="form-group">
+            <label for="discountValue">Discount Value (%)</label>
+            <input type="number" class="form-control" id="discountValue" name="discount_value" value="{{ discount.discount_value }}" placeholder="Enter discount value" min="0" max="100" required>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ discount.quantity }}" min="1" max="100" required>
+        </div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

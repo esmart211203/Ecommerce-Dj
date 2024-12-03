@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Update profile{% endblock title %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<section style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3">{{user.username}}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="text-center">Cập nhật hồ sơ</h1>
+                <form method="POST" action="{% url 'user.update' %}">
+                  {% csrf_token %}
+                  {% comment %} name  {% endcomment %}
+                  <div class="form-group row">
+                      <label for="name" class="col-sm-2 col-form-label">Họ Tên:</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="name" name="full_name" value="{{profile.full_name}}" placeholder="Nhập tên người dùng">
+                      </div>
+                  </div>
+                  {% comment %} sex  {% endcomment %}
+                  <div class="form-group row mt-2">
+                      <label class="col-sm-2 col-form-label">Giới tính:</label>
+                      <div class="col-sm-10">
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" {% if profile.sex == 'Nam' %}checked{% endif %} name="sex" id="male" value="Nam">
+                              <label class="form-check-label" for="male">
+                                  Nam
+                              </label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" {% if profile.sex == 'Nữ' %}checked{% endif %} name="sex" id="female" value="Nữ">
+                              <label class="form-check-label" for="female">
+                                  Nữ
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                  {% comment %} số điện thoại  {% endcomment %}
+                  <div class="form-group row mb-3">
+                      <label for="phone" class="col-sm-2 col-form-label">Số điện thoại:</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="phone" value="{{profile.phone}}" name="phone" placeholder="Nhập số điện thoại">
+                      </div>
+                  </div>
+                  {% comment %} email  {% endcomment %}
+                  <div class="form-group row mb-3">
+                      <label for="email" class="col-sm-2 col-form-label">Email:</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" readonly placeholder="Nhập email">
+                      </div>
+                  </div>
+                  {% comment %} ngày sinh  {% endcomment %}
+                  <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">Ngày sinh:</label>
+                      <div class="col-sm-10">
+                          <div style="display: flex">
+                              <div class="form-group mr-2">
+                                  <select class="form-control" id="day" name="day">
+                                      <option>Ngày</option>
+                                      {% for day in days %}
+                                        <option value="{{ day }}" {% if profile.birthday.day == day %}selected{% endif %} >{{ day }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                              <span style="margin: 8px;">/</span>
+                              <div class="form-group mx-2">
+                                  <select class="form-control" id="month" name="month">
+                                      <option>Tháng</option>
+                                      {% for month in months %}
+                                        <option value="{{ month }}" {% if profile.birthday.month == month %}selected{% endif %}>{{ month }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                              <span style="margin: 8px;">/</span>
+                              <div class="form-group mx-2">
+                                  <select class="form-control" id="year" name="year">
+                                      <option>Năm</option>
+                                      {% for year in years %}
+                                        <option value="{{ year }}" {% if profile.birthday.year == year %}selected{% endif %}>{{ year }}</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  {% comment %} button  {% endcomment %}
+                  <div class="col-sm-10 offset-sm-2 mt-3">
+                      <button type="submit" class="btn" style="color: #ffff;
+                      background: #59ab6e;">Cập nhật</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

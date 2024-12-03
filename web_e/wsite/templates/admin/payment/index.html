@@ -1,0 +1,72 @@
+{% extends "../base_admin.html" %}
+
+{% block title %}Payment Management{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Payment Management</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Order Description</th>
+                    <th scope="col">Transaction No.</th>
+                    <th scope="col">Response Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in payments %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ data.order_id }}</td>
+                    <td>{{ data.amount }}</td>
+                    <td>{{ data.order_desc }}</td>
+                    <td>{{ data.vnp_TransactionNo }}</td>
+                    <td>{{ data.vnp_ResponseCode }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No payments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<style>
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: #f8f9fa; /* light gray background */
+    }
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: middle; /* vertically center content */
+        border: 1px solid #dee2e6; /* light gray border */
+    }
+    .table thead th {
+        vertical-align: middle; /* vertically center content in header */
+        border-color: #dee2e6;
+        background-color: #e9ecef; /* light gray header background */
+        color: #495057; /* dark gray text color */
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 123, 255, 0.1); /* striped background color */
+    }
+    .table-striped tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.2); /* hover background color */
+    }
+</style>
+{% endblock content %}

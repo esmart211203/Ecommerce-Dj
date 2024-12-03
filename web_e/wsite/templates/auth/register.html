@@ -1,0 +1,68 @@
+{% extends "../base.html" %}
+{% block import %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock import %}
+{%block content%}
+<div class="container">
+    <!-- Section: Design Block -->
+<form class="" method="post">
+  {% csrf_token %}
+    <!-- Jumbotron -->
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+      <div class="container">
+        <div class="row gx-lg-5 align-items-center">
+          {% comment %} content-left {% endcomment %}
+          <div class="col-lg-6 mb-5 mb-lg-0">
+            <h1 class="my-5 display-3 fw-bold ls-tight">
+              Chào mừng bạn đến với <br />
+              <span style="color:rgb(126,195,176)">GCon</span>
+            </h1>
+            <p style="color: hsl(217, 10%, 50.8%)">
+              Gcon giúp bạn kết nối và chia sẻ với mọi người trong cuộc sống của bạn.
+            </p>
+          </div>
+          {% comment %} content-right {% endcomment %}
+          <div class="col-lg-6 mb-5 mb-lg-0">
+            <div class="card">
+              <div class="card-body py-5 px-md-5">
+                <form>
+                  {% if error_message %}
+                  <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                  </div>
+                {% endif %}
+                  <!-- Email input -->
+                  <div class="form-outline mb-4">
+                    <input type="text" id="form3Example3" name="username" class="form-control" />
+                    <label class="form-label" for="form3Example3">Tên người dùng</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input type="email" id="form3Example4" name="email" class="form-control" />
+                    <label class="form-label" for="form3Example4">Email</label>
+                  </div>
+                  <!-- Password input -->
+                  <div class="form-outline mb-4">
+                    <input type="password" id="form3Example4" name="password" class="form-control" />
+                    <label class="form-label" for="form3Example4">Mật khẩu</label>
+                  </div>
+  
+                  <!-- Submit button -->
+                  <button type="submit" class="btn btn-primary btn-block mb-4" style="background: rgb(126,195,176); border: none;">
+                    Đăng ký
+                  </button>
+                  <div class="col">
+                    <!-- Simple link -->
+                    <a style="color:rgb(126,195,176)" href="{% url "login" %}">Đăng nhập</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Jumbotron -->
+  </form>
+  <!-- Section: Design Block -->
+</div>
+{%endblock%}

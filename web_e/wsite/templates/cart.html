@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+    .ui-w-40 {
+        width: 40px !important;
+        height: auto;
+    }
+    .card{
+        box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);    
+    }
+    
+    .ui-product-color {
+        display: inline-block;
+        overflow: hidden;
+        margin: .144em;
+        width: .875rem;
+        height: .875rem;
+        border-radius: 10rem;
+        -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+        vertical-align: middle;
+    }
+    a.btn.btn-primary {
+      border: none;
+      background: #59ab6e;
+      display: block;
+      margin-top: 20px;
+      transition: box-shadow 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà cho box-shadow */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Thêm box-shadow mặc định */
+  }
+  a.btn.btn-primary:hover {
+    color: #ffffff; /* Đảm bảo màu văn bản vẫn trắng khi hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Tăng box-shadow khi hover để tạo hiệu ứng nổi */
+    
+}
+
+</style>
+<div class="container px-3 my-5 clearfix">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success">Thanh toán đã thành công!</div>
+    {% endif %}
+    <div class="card">
+        <div class="card-header" style="display: flex;justify-content: space-between;">
+            <div>
+              <a style="cursor: pointer;color:#1982F9;" onclick="history.back()"><i class="fa-solid fa-chevron-left"></i> Mua thêm sản phẩm khác</a>
+            </div>
+            {% include "breadcrumb.html" %}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered m-0">
+                <thead>
+                  <tr>
+                    <!-- Set columns width -->
+                    <th class="text-center py-3 px-4" style="min-width: 200px;">Tên sản phẩm &amp; Chi tiết</th>
+                    <th class="text-right py-3 px-4" style="width: 15 0px;">Giá</th>
+                    <th class="text-center py-3 px-4" style="width: 200px;">Số Lượng</th>
+                    <th class="text-center align-middle py-3 px-0" style="width: 40px;">Xoá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for data in cart_items %}
+                  <tr>
+                    <td class="p-4">
+                      <div class="media align-items-center">
+                        <img src="media/{{data.product.image}}" class="d-block ui-w-40 ui-bordered mr-4" alt="" >
+                        <div class="media-body">
+                          <a href="#" class="d-block text-dark" style="text-decoration: none;">{{data.product}}</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-right font-weight-semibold align-middle p-4"> {{ data.product.get_price }} VND</td>
+                    <td class="align-middle p-4">
+                      <div class="input-group">
+                        {% if data.quantity > 1 %}
+                          <div class="input-group-prepend">
+                            <a class="btn btn-outline-secondary btn-decrease" href="{% url "decrease.quantity" data.id %}" data-action="decrease" data-field="quantity">
+                              <i class="fas fa-minus"></i>
+                            </a>
+                          </div>
+                        {% endif %}
+                        <input type="text" readonly class="form-control text-center" id="quantityInput" value="{{ data.quantity }}" name="quantity">
+                        <div class="input-group-append">
+                          <a class="btn btn-outline-secondary btn-increase" href="{% url "increase.quantity" data.id %}" data-action="increase" data-field="quantity">
+                            <i class="fas fa-plus"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center align-middle px-0">
+                      <a href="{% url "cart.delete" data.id %}" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- / Shopping cart table -->
+        
+            <div class="pb-4">
+              <div class="d-flex justify-content-between mt-3">
+                <div class="text-right">
+                  <label class="title_total text-muted font-weight-normal m-0" style="font-family: sans-serif;">Tổng tiền :</label>
+                  <div class="text-large"><strong style="font-weight: bold;font-size: 20px;color: red;">{{total_cart}} VND</strong></div>
+              </div>
+              <div>
+                <a href="{% url "cart.clear" %}" onclick="return confirmDeletion();">
+                  <i class="fa-solid fa-trash-can" style="color:#797979;"></i>
+                </a>
+              </div>
+            </div>
+        
+            <div class="float-right">
+              <a href="{% url "checkout-info" %}" class="btn btn-primary" class="btn_dathang">ĐẶT HÀNG NGAY</a>
+            </div>
+          </div>
+      </div>
+      <hr>
+      {% if orders %}
+      <div class="container">
+        <h1 class="text-center mb-3">Thông Tin Đơn Hàng</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Tài Khoản</th>
+              <th scope="col">Địa chỉ</th>
+              <th scope="col">Tình Trạng</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in orders %}
+              <tr>
+                <th scope="row"> <a href="{% url "order.details" item.id %}"><i class="fa-regular fa-eye" style="color: #59ab6e;"></i></a></th>
+                <td>{{item.user}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.status}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-center">Chưa có đơn hàng nào</p>
+      {% endif %}
+  </div>
+<script>
+  function confirmDeletion() {
+    return confirm('Bạn có chắc muốn xóa không?');
+  }
+</script>
+{% endblock %}

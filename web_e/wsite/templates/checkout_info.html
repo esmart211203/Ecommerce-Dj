@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+  span {
+    font-family: sans-serif;
+}
+</style>
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-body">
+      <div>
+        <a style="cursor: pointer;color:#1982F9;" onclick="history.back()"><i class="fa-solid fa-chevron-left"></i> Back</a>
+      </div>
+      <h1>
+      </h1>
+      <div style="display: flex;justify-content: space-between;">
+        
+        <h3 class="text-center" style="margin-top:10px;">Thông tin khách mua hàng</h3>
+        {% include "breadcrumb.html" %}
+      </div>
+      <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <span>Phương thức thanh toán</span>
+        <div class="payment_methods" style="display: flex">
+          <div class="form-check">
+            <input class="form-check-input" checked type="radio" name="payment_method" id="direct" value="direct">
+            <label class="form-check-label" for="direct">
+              Thanh Toán Tiền Mặt
+            </label>
+          </div>
+          <div class="form-check" style="margin-left: 10px">
+            <input class="form-check-input" type="radio" name="payment_method" id="online" value="online">
+            <label class="form-check-label" for="online">
+              Thanh Toán Online
+            </label>
+          </div>
+        </div>
+        <div class="mt-3 mb-3">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="full_name">Họ và tên</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Nhập họ và tên" value="" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="full_name">Số điện thoại</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" value="" required>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <span>Chọn cách nhận hàng</span><br>
+        <input type="radio" id="option12" name="options" checked value="Option 12" checked>
+        <label for="option12">Giao hàng tận nơi</label>
+
+        <div class="div_form-request" style="border-radius: 10px;
+        background: #ECECEC;
+        padding: 30px;">
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                  <input type="text" class="form-control" name="province"  placeholder="Nhập tỉnh, Thành phố" value="" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="district"  placeholder="Nhập Quận, Huyện" value="" required>
+              </div>
+              
+            </div>
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="ward"  placeholder="Nhập Phường, Xã" value="" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" name="more_info"  placeholder="Số nhà, tên đường" value="" required>
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <textarea class="form-control mt-4" id="note" name="note" placeholder="Lưu ý, yêu cầu khác (Không bắt buộc)"></textarea>          <hr>
+        <span>Dịch vụ giao hàng</span><br>
+        
+        <input type="radio" id="option14" name="options4" value="Option 14" checked>
+        <label for="option14">Miễn phí vận chuyển (Giao hàng tiêu chuẩn)</label>
+        <h1>
+        </h1>
+        <div style="display: flex;justify-content: space-between;">
+          <h3 id="total_cart">Tổng tiền: <span style="font-weight: bold;color: red">{{total_cart}} VND</span></h3>
+          <button type="submit"class="btn m-3" style="width: 100px;    color: #ffff;
+          background: #59ab6e;">Đặt hàng</button>
+        </div>
+        </div>
+        <input class="form-control" id="discount_code" name="discount" style="display: none"/>
+      </form>
+    </div>
+    <form id="form_discount" method="POST" action="{% url "check_discount" %}" class="d-flex">
+      <div class="mb-2">
+        <label for="discount">Giảm giá</label>
+        <input class="form-control" id="discount" name="discount" placeholder="Nhập mã giảm giá"/>
+      </div>
+      <button type="submit" id="apply_button" class="btn btn-sm ml-auto" style="height: 43px;margin-top: 25px;color: #ffff;
+      background: #59ab6e;">Áp dụng</button>
+    </form>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    document.getElementById("form_discount").addEventListener("submit", function(e) {
+        e.preventDefault(); 
+        var discount_code = document.getElementById("discount").value; 
+        var csrftoken = getCookie('csrftoken');
+        fetch("/check_discount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": csrftoken
+            },
+            body: "discount=" + encodeURIComponent(discount_code)
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Request failed: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function(data) {
+          var discount_value = data.discount_value;
+          var total_cart_element = document.getElementById("total_cart");
+          var total_cart_value = parseFloat(total_cart_element.innerText.replace(/\D/g, '')); 
+          //var discounted_total = total_cart_value * discount_value; //sai ở đây vd 87*0.1 thì ra 87 
+          var discounted_total = total_cart_value * (1 - discount_value);
+          const formatted_total = discounted_total.toLocaleString('vi-VN');
+          total_cart_element.innerHTML = 'Tổng tiền: <span style="font-weight: bold;color: red">' + formatted_total + ' VND</span>';
+          var applyButton = document.getElementById("apply_button");
+          var discount_code_input = document.getElementById("discount_code");
+          discount_code_input.value = discount_code;
+          applyButton.style.display = "none";
+      })
+        .catch(function(error) {
+            console.error('Đã xảy ra lỗi:', error);
+        });
+    });
+});
+
+</script>
+  
+{% endblock %}

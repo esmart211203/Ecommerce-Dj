@@ -1,0 +1,465 @@
+
+{% extends "../base_admin.html" %} {% block title %}Product page{% endblock title %} {% block content %}
+<h1 class="text-center" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)">
+  Statistical
+</h1>
+<div class="container-fluid">
+  <!--  Row 1 -->
+  <div class="row">
+    <div class="col-lg-9 d-flex align-items-strech">
+      <div class="card w-100">
+        <div class="card-body">
+          <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+            <div class="mb-3 mb-sm-0">
+              <label for="action-select">Thống kê sản phẩm</label>
+              <select class="form-control" id="option-select">
+                <option value="">Chọn tùy chọn</option>
+                <option value="total-revenue">Tổng doanh thu</option>
+                <option value="total-product">Thống kê sản phẩm đã bán</option>
+              </select>
+            </div>
+            <div>
+              <label for="action-select">Ngày tháng năm</label>
+              <select class="form-control" id="option-date-time">
+                <option value="day">Day</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+              </select>
+            </div>
+          </div>
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 d-flex align-items-stretch">
+      <div class="card w-100">
+        <div class="card-body p-4">
+          <div class="mb-4">
+            <h5 class="card-title fw-semibold">User with Highest Purchases</h5>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <p class="mb-0"><strong>User Name:</strong> {{ user_bought_hight.user__username }}</p>
+            </div>
+            <div>
+              <p class="mb-0"><strong>Total Quantity Bought:</strong> {{ user_bought_hight.total_quantity_bought }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8 d-flex align-items-stretch">
+      <div class="card w-100">
+        <div class="card-body p-4">
+          <h5 class="card-title fw-semibold mb-4">Rate product</h5>
+          <div class="table-responsive">
+            <table class="table text-nowrap mb-0 align-middle">
+              <thead class="text-dark fs-4">
+                <tr>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Image</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Product name</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Quantity sold</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Priority</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Price</h6>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in top_5_best_selling_products %} 
+                <tr>
+                  <td class="border-bottom-0">
+                    <img class="card-img rounded-0 img-fluid" src="media/{{data.first_image_url}}" style="height: 50px;">
+                  </td>
+                  <td class="border-bottom-0">
+                    <h6 class="fw-semibold mb-1">{{data.product__name}}</h6>
+                  </td>
+                  <td class="border-bottom-0">
+                    <p class="mb-0 fw-normal">{{data.total_quantity_sold}}</p>
+                  </td>
+                  <td class="border-bottom-0">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge bg-primary rounded-3 fw-semibold">HOT</span>
+                    </div>
+                  </td>
+                  <td class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0 fs-4">{{data.product__price}} VND</h6>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% comment %} <div class="row">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card overflow-hidden rounded-2">
+        <div class="position-relative">
+          <a href="javascript:void(0)"><img src="../assets/images/products/s4.jpg" class="card-img-top rounded-0"
+              alt="..." /></a>
+          <a href="javascript:void(0)"
+            class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i
+              class="ti ti-basket fs-4"></i></a>
+        </div>
+        <div class="card-body pt-3 p-4">
+          <h6 class="fw-semibold fs-4">Boat Headphone</h6>
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-semibold fs-4 mb-0">
+              $50
+              <span class="ms-2 fw-normal text-muted fs-3"><del>$65</del></span>
+            </h6>
+            <ul class="list-unstyled d-flex align-items-center mb-0">
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card overflow-hidden rounded-2">
+        <div class="position-relative">
+          <a href="javascript:void(0)"><img src="../assets/images/products/s5.jpg" class="card-img-top rounded-0"
+              alt="..." /></a>
+          <a href="javascript:void(0)"
+            class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i
+              class="ti ti-basket fs-4"></i></a>
+        </div>
+        <div class="card-body pt-3 p-4">
+          <h6 class="fw-semibold fs-4">MacBook Air Pro</h6>
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-semibold fs-4 mb-0">
+              $650
+              <span class="ms-2 fw-normal text-muted fs-3"><del>$900</del></span>
+            </h6>
+            <ul class="list-unstyled d-flex align-items-center mb-0">
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card overflow-hidden rounded-2">
+        <div class="position-relative">
+          <a href="javascript:void(0)"><img src="../assets/images/products/s7.jpg" class="card-img-top rounded-0"
+              alt="..." /></a>
+          <a href="javascript:void(0)"
+            class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i
+              class="ti ti-basket fs-4"></i></a>
+        </div>
+        <div class="card-body pt-3 p-4">
+          <h6 class="fw-semibold fs-4">Red Valvet Dress</h6>
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-semibold fs-4 mb-0">
+              $150
+              <span class="ms-2 fw-normal text-muted fs-3"><del>$200</del></span>
+            </h6>
+            <ul class="list-unstyled d-flex align-items-center mb-0">
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card overflow-hidden rounded-2">
+        <div class="position-relative">
+          <a href="javascript:void(0)"><img src="../assets/images/products/s11.jpg" class="card-img-top rounded-0"
+              alt="..." /></a>
+          <a href="javascript:void(0)"
+            class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i
+              class="ti ti-basket fs-4"></i></a>
+        </div>
+        <div class="card-body pt-3 p-4">
+          <h6 class="fw-semibold fs-4">Cute Soft Teddybear</h6>
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-semibold fs-4 mb-0">
+              $285
+              <span class="ms-2 fw-normal text-muted fs-3"><del>$345</del></span>
+            </h6>
+            <ul class="list-unstyled d-flex align-items-center mb-0">
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+              <li>
+                <a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> {% endcomment %}
+</div>
+
+<nav aria-label="Page navigation example" id="pagination-container" class="text-center">
+  <ul class="pagination justify-content-center">
+    <!-- Previous button -->
+    <li class="page-item disabled" id="previous-page">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <!-- Pagination links will be appended here -->
+    <!-- Next button -->
+    <li class="page-item" id="next-page">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
+<div id="current-page-indicator" class="text-center">Trang 1</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let myChart;
+
+  function createChart(ctx, labels, data) {
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Tổng sản phẩm đã bán',
+          data: data,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  function createChartRevenue(ctx, labels, data) {
+    if (myChart) {
+      myChart.destroy(); 
+    }
+  
+    myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Tổng doanh thu',
+          data: data,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  function getDaysInCurrentMonth() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    return days;
+  }
+  // Actionnnnnnnn 
+  const actionSelect = document.getElementById('option-select');
+  const dateTimeSelect = document.getElementById('option-date-time');
+  actionSelect.addEventListener('change', handleActionChange);
+  dateTimeSelect.addEventListener('change', handleDateTimeChange);
+  
+  function handleActionChange() {
+    const selectedAction = actionSelect.value;
+    const selectedDateTime = dateTimeSelect.value;
+    if (myChart) {
+      myChart.destroy();
+    }
+    if (selectedAction === 'total-revenue') {
+      displayTotalRevenueChart(selectedDateTime);
+    } else if (selectedAction === 'total-product') {
+      displayTotalProductChart(selectedDateTime);
+    }
+  }
+  
+  function handleDateTimeChange() {
+    const selectedAction = actionSelect.value;
+    const selectedDateTime = dateTimeSelect.value;
+    console.log(`Người dùng đã chọn "${selectedAction}" và "${selectedDateTime}"`);
+  
+    // Xóa biểu đồ cũ
+    if (myChart) {
+      myChart.destroy();
+    }
+  
+    // Hiển thị biểu đồ mới dựa trên lựa chọn của người dùng
+    if (selectedAction === 'total-revenue') {
+      displayTotalRevenueChart(selectedDateTime);
+    } else if (selectedAction === 'total-product') {
+      displayTotalProductChart(selectedDateTime);
+    }
+  }
+  
+  function displayTotalRevenueChart(selectedDateTime) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let labels, data;
+    switch (selectedDateTime) {
+      case 'day':
+        fetch('/statistics_revenue_day')
+          .then(response => response.json())
+          .then(result => {
+            const resultData = [];
+            for (const day in result) {
+              if (result.hasOwnProperty(day)) {
+                resultData.push(result[day]);
+              }
+            }
+            labels = getDaysInCurrentMonth();
+            data = resultData;
+            createChartRevenue(ctx, labels, data);
+          })
+          .catch(error => {
+            console.error('Error fetching daily data:', error);
+          });
+        break;
+      case 'month':
+          fetch('/statistics_revenue_month')
+          .then(response => response.json())
+          .then(result => {
+            const labels = Object.keys(result);
+            const data = Object.values(result);
+            createChartRevenue(ctx, labels, data);
+          })
+          .catch(error => {
+            console.error('Error fetching monthly data:', error);
+          });
+        break;
+      case 'year':
+          fetch('/statistics_revenue_year')
+          .then(response => response.json())
+          .then(result => {
+            const labels = Object.keys(result);
+            const data = Object.values(result);
+            createChartRevenue(ctx, labels, data);
+          })
+          .catch(error => {
+            console.error('Error fetching yearly data:', error);
+          });
+        break;
+    }
+  }
+  
+  
+  function displayTotalProductChart(selectedDateTime) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let labels, data;
+    switch (selectedDateTime) {
+      case 'day':
+        fetch('/statistics_product_day')
+          .then(response => response.json())
+          .then(result => {
+            data = result;
+            const labels = getDaysInCurrentMonth();
+            createChart(ctx, labels, data);
+          })
+          .catch(error => {
+            console.error('Error fetching daily data:', error);
+          });
+        break;
+      case 'month':
+        fetch('/statistics_product_month')
+        .then(response => response.json())
+        .then(result => {
+          data = result;
+          labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Decc'];
+          createChart(ctx, labels, data);
+        })
+        .catch(error => console.error('Error:', error));
+        break;
+      case 'year':
+        fetch('/statistics_product_year')
+        .then(response => response.json())
+        .then(result => {
+          const labels = result.data.map(item => item.year);
+          const data = result.data.map(item => item.value);
+          createChart(ctx, labels, data);
+        })
+        .catch(error => console.error('Error:', error));
+        break;
+    }
+  }
+  
+</script>
+{% endblock content %}

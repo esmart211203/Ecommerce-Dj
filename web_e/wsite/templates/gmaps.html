@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+
+<style>
+    .align-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 100px); /* Giữ cho nội dung căn giữa theo chiều dọc, trừ đi chiều cao của thanh điều hướng */
+        padding: 0 20px;
+    }
+
+    .iframe-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: 56.25%; /* Tỉ lệ khung hình 16:9 */
+    }
+
+    .iframe-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .store-address {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 24px;
+    }
+</style>
+
+<div class="container">
+    <div class="align-center">
+        <div class="iframe-container">
+            <iframe
+                title='gmap'
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.783655789391!2d106.69934437586907!3d10.827861658241186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528f4a62fce9b%3A0xc99902aa1e26ef02!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBWxINuIExhbmcgLSBDxqEgc-G7nyAz!5e0!3m2!1svi!2s!4v1711526082384!5m2!1svi!2s"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
+        <div class="store-address">
+            <h2>Trường Đại Học Văn Lang</h2>
+            <p><i class="fas fa-map-marker-alt fa-fw"></i>
+              Cơ sở 1: 69/68 Đặng Thùy Trâm, P. 13, Q. Bình Thạnh, TP. HCM</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+  /* Optional: Basic styles for the toast message */
+  #msg_toast {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      display: none;
+      z-index: 1000;
+  }
+  .toast-success {
+      background-color: green;
+  }
+
+  .toast-error {
+      background-color: red;
+  }
+</style>
+
+<section style="background-color: #eee;">
+  <div id="msg_toast"></div>
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3">{{user.username}}</h5>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{user.username}}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{user.email}}</p>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-4 mb-md-0">
+                <div class="card-body">
+                    <p style="font-family: sans-serif;text-align: center;">Thông tin tài khoản</p>
+                  {% if profile %}
+                    <div class="d-flex justify-content-between mb-3">
+                      <p class="mb-1" style="font-size: .77rem;">Họ và tên:</p>
+                      {{profile.full_name}}
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                      <p class="mb-1" style="font-size: .77rem;">Số điện thoại:</p>
+                      {{profile.phone}}
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                      <p class="mb-1" style="font-size: .77rem;">Giới tính:</p>
+                      {{profile.sex}}
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                      <p class="mb-1" style="font-size: .77rem;">Ngày sinh:</p>
+                      {{profile.birthday}}
+                    </div>
+                    <div class="mb-4 d-flex justify-content-between">
+                      <button type="submit" class="btn mt-2 mb-2" style="color: #ffff;
+                  background: #59ab6e;"><a href="{% url 'user.update' %}" style="text-decoration: none;
+                  color: #ffff;">Thay đổi thông tin</a></button>
+                      
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card mb-4 mb-md-0 container">
+                {% if messages %}
+                  <div class="messages">
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                <form method="post" action="{% url 'change-password' %}">
+                  {% csrf_token %}
+                  <p style="font-family: sans-serif;text-align: center;margin-top: 15px;">Thay đổi mật khẩu</p>
+                  <div class="form-group">
+                    <label for="old-password">Mật khẩu cũ:</label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="new-password">Mật khẩu mới:</label>
+                    <input type="password" class="form-control" id="new-password" name="new-password" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="confirm-password">Xác nhận mật khẩu mới:</label>
+                    <input type="password" class="form-control" id="confirm-password" name="confirm-password" required>
+                  </div>
+                  <button type="submit" class="btn mt-2 mb-2" style="color: #ffff;
+                  background: #59ab6e;">Đổi mật khẩu</button>
+                </form>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+      {% if wishlists %}
+            <div class="cart_id_wish card" style=" margin-top: 20px;"> 
+              <div class="card-header">
+                  <span class="align-middle"style="font-size: 20px;font-family: sans-serif;">Danh sách sản phẩm yêu thích</span>
+              </div>
+              <div class="card-body">
+                {% for wishlist in wishlists %}
+                  <div class="d-flex justify-content-between align-items-center">
+                      <a href="{% url 'product.detail' product_id=wishlist.product.id %}"style="text-decoration: none;color:black;">
+                        <div class="div_stt_wish" style="display: flex;">
+                          <th scope="row">{{ forloop.counter }}.</th>
+                          <p class="mb-0">{{ wishlist.product.name }}</p>
+                        </div> 
+                      </a>                  
+                      <a href="#" id="btn_wishlist" data-wishlist-id="{{wishlist.id}}"><i class="fa-solid fa-trash" style="color:black;"></i></a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+    </div>
+          
+</section>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const btn_wishlist = document.getElementById('btn_wishlist');
+        const msg_toast = document.getElementById('msg_toast');
+  
+        btn_wishlist.addEventListener('click', (event) => {
+            const btn = event.target;
+            const WishlistId = btn_wishlist.getAttribute('data-wishlist-id');
+            
+            fetch('/delete/wish_list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: `wishlist_id=${WishlistId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const parentDiv = btn.closest('.d-flex');
+                if (parentDiv) {
+                    parentDiv.remove();
+                }
+                showToast(data.message, 'success');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Vui lòng đăng nhập!!', 'error');
+            });
+        });
+  
+        // Function to get the CSRF token from the cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+  
+        // Function to show the toast message
+        function showToast(message, type) {
+            msg_toast.innerText = message;
+            msg_toast.className = ''; // Reset class names
+            if (type === 'success') {
+                msg_toast.classList.add('toast-success');
+            } else if (type === 'error') {
+                msg_toast.classList.add('toast-error');
+            }
+            msg_toast.style.display = 'block';
+            setTimeout(() => {
+                msg_toast.style.display = 'none';
+            }, 3000); 
+        }
+    });
+</script>
+{% endblock %}

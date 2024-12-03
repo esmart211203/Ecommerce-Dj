@@ -1,0 +1,25 @@
+{% extends "../base_admin.html" %}
+{% block title %}{{title}}{% endblock title %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center py-1">{{title}}</h1>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+          <label class="form-label">Tên thuộc tính</label>
+          <input type="text" class="form-control" name="att_name" value="{{ attribute.att_name }}" placeholder="Nhập tên thuộc tính">
+      </div>
+      <div class="form-group">
+          <label for="exampleFormControlSelect1">Category</label>
+          <select class="form-control" name="category_id">
+              {% for data in categories %}
+                  <option value="{{ data.id }}" {% if data.id == attribute.category.id %}selected{% endif %}>{{ data.name }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <button type="submit" class="btn btn-primary float-right">Submit</button>
+    </form>  
+      <a href="#" onclick="history.back()"><i class="fa-solid fa-backward"></i></a>
+</div>
+
+{% endblock %}

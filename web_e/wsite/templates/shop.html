@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+    .ct_submenu a:hover {
+        color: #007bff;
+    }
+/* CSS */
+ul.templatemo-accordion li {
+    border-bottom: 1px solid #ddd; /* Đường ngăn dưới */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+ul.templatemo-accordion li:last-child {
+    border-bottom: none; /* Loại bỏ đường ngăn cho mục cuối cùng */
+}
+
+a.fix_hover {
+    border-radius:10px;
+    color: inherit; /* Giữ nguyên màu chữ ban đầu */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi mượt */
+}
+
+a.fix_hover:hover {
+    border-radius:10px;
+    background-color: #59ab6e; /* Màu nền đỏ khi hover */
+    color: white; /* Thay đổi màu chữ khi hover để dễ đọc hơn */
+    text-decoration: none; /* Loại bỏ gạch chân */
+}
+
+/* Đảm bảo thẻ <a> trong danh sách không bị ảnh hưởng bởi các quy tắc CSS khác */
+ul.templatemo-accordion li a.fix_hover {
+    padding: 10px; /* Thêm khoảng đệm để màu nền dễ nhìn hơn */
+    display: block; /* Giúp thẻ <a> bao phủ toàn bộ khu vực trong <li> */
+}
+.sort_list {
+    margin-left: 15px;
+}
+.sort_list {
+    display: flex;
+}
+svg.fix_svg.icon.icon-filter {
+    width: 25px;
+    height: 40px;
+    margin-right:10px;
+}
+
+
+</style>
+<!-- Start Content -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3 ct_sidebar">
+            <h1 class="h2 pb-4">Danh mục sản phẩm</h1>
+            <ul class="list-unstyled templatemo-accordion">
+                {% for data in categories %}
+                    <li class="pb-3">
+                        <a class="fix_hover collapsed d-flex justify-content-between h3 text-decoration-none" 
+                        id="categories"
+                        href="{% url 'shop.category' data.id %}">
+                            {{data.name}}
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <div class="sort_list">
+                    <label for="sort" style="margin: auto"></label>
+                    <svg class="fix_svg icon icon-filter" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.5 1H1.5V3.47059L6.375 8.41176V15L9.625 12.9412V8.41176L14.5 3.47059V1Z" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"></path>
+                    
+                    </svg>
+                    <select class="form-control" id="sort">
+                        <option>Filter</option>
+                        <option {% if request.GET.sort == "Tăng dần" %} selected {% endif %}>Tăng dần</option>
+                        <option {% if request.GET.sort == "Giảm dần" %} selected {% endif %}>Giảm dần</option>
+                    </select>
+                </div>
+                <div>
+                    {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal">
+                        Bộ lọc
+                    </button> {% endcomment %}
+                </div>
+            </div>
+            <div class="row">
+                {% for data in products %}
+                <div class="col-md-4">
+                    <div class="card mb-4 product-wap rounded-0">
+                        <div class="card rounded-0">
+                            <img class="product-image card-img rounded-0 img-fluid" src="media/{{data.get_first_image}}" style="height: 300px;">
+                            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                <ul class="list-unstyled">
+                                    {% comment %} <li><a class="btn btn-success text-white" href=""><i class="far fa-heart"></i></a></li> {% endcomment %}
+                                    <li><a class="btn btn-success text-white mt-2" href="{% url "product.detail" data.id %}"><i class="far fa-eye"></i></a></li>
+                                    <li>
+                                        <form action="{% url "cart.api.store" data.id %}" id="cart-form-{{ data.id }}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="quantity" value="1">
+                                            <a class="added btn btn-success text-white mt-2 submit-btn" id="submit-btn-{{ data.id }}" href="#"><i class="fas fa-cart-plus"></i></a>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url "product.detail" data.id %}" class="h3 text-decoration-none">{{data.name}}</a>
+                            <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                <li>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i>
+                                    <i class="text-warning fa fa-star"></i> 
+                                    <i class="text-warning fa fa-star"></i>
+                                </li>
+                            </ul>
+                            <p class="text-center mb-0">{{data.get_price}} VND</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        $('#sort').change(function(){
+            var selectedOption = $(this).children("option:selected").val();
+            window.location.href = window.location.pathname + "?sort=" + selectedOption;
+        });
+        $('categories').click(function(){
+            print("selected")
+        });
+        $('.submit-btn').on('click', function(event) {
+            event.preventDefault();
+            var formId = $(this).attr('id').replace('submit-btn-', 'cart-form-');
+            var form = $('#' + formId);
+            // Log the image URL
+            var image = form.closest('.product-wap').find('.product-image');
+            var imageUrl = image.attr('src');
+            console.log("Product Image URL:", imageUrl);
+            var url = form.attr('action');
+            var formData = new FormData(form[0]);
+    
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                } else {
+                    var showButton = document.querySelector('.added');
+                    var cartContent = document.querySelector('.cart-content');
+                    cartContent.style.display = 'block';
+                    cartContent.classList.add('fade');
+                    var product_name = data.product_name
+                    setTimeout(function() {
+                        cartContent.classList.remove('fade');
+                        cartContent.style.display = 'none';
+                    }, 5000);
+                    $('#pro_name').text(data.product_name);
+                    $('#pro_image').attr('src', imageUrl);
+                    console.log("Product name: ", product_name);
+                    console.log('Success:', data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %}

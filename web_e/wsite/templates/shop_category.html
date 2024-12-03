@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock title %}
+{% block content %}
+{% load static %}
+<style>
+    .modal-body {
+        padding: 20px;
+    }
+    .filter-section {
+        margin-bottom: 20px;
+    }
+    .filter-section span {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+    }
+    .filter-options {
+        margin-left: 20px;
+    }
+    .form-check-label {
+        margin-left: 10px;
+    }
+    .price-range input {
+        width: 100px;
+    }
+    .price-range span {
+        margin: 0 10px;
+    }
+    .modal-header {
+        border-bottom: none;
+    }
+    .modal-body {
+        padding: 2rem;
+    }
+    .filter-section {
+        margin-bottom: 1.5rem;
+    }
+    .filter-section span {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+    .filter-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .filter-options .form-check {
+        flex: 1 1 auto;
+    }
+    .price-range input {
+        width: 120px;
+    }
+    .modal-footer {
+        justify-content: flex-end;
+        border-top: none;
+    }
+    .form-check-label {
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .form-check-label.active {
+        background-color: #007bff;
+        color: white;
+    }
+    button.btn_fix_filter {
+        margin: 14px;
+        width: 100px;
+        border-radius: 10px;
+        padding: 5px;
+        background: #ffff;
+        border: var(--bs-border-width) solid var(--bs-border-color);
+
+    }
+/* CSS */
+ul.templatemo-accordion li {
+    border-bottom: 1px solid #ddd; /* Đường ngăn dưới */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+ul.templatemo-accordion li:last-child {
+    border-bottom: none; /* Loại bỏ đường ngăn cho mục cuối cùng */
+}
+
+a.fix_hover {
+    border-radius:10px;
+    color: inherit; /* Giữ nguyên màu chữ ban đầu */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi mượt */
+}
+
+a.fix_hover:hover {
+    border-radius:10px;
+    background-color: #59ab6e; /* Màu nền đỏ khi hover */
+    color: white; /* Thay đổi màu chữ khi hover để dễ đọc hơn */
+    text-decoration: none; /* Loại bỏ gạch chân */
+}
+
+/* Đảm bảo thẻ <a> trong danh sách không bị ảnh hưởng bởi các quy tắc CSS khác */
+ul.templatemo-accordion li a.fix_hover {
+    padding: 10px; /* Thêm khoảng đệm để màu nền dễ nhìn hơn */
+    display: block; /* Giúp thẻ <a> bao phủ toàn bộ khu vực trong <li> */
+}
+.sort_list {
+    margin-left: 15px;
+}
+.sort_list {
+    display: flex;
+}
+svg.fix_svg.icon.icon-filter {
+    width: 25px;
+    height: 40px;
+    margin-right:10px;
+}
+
+
+</style>
+<!-- Start Content -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3 ct_sidebar">
+            <h1 class="h2 pb-4">Danh mục sản phẩm</h1>
+            <ul class="list-unstyled templatemo-accordion">
+                {% for data in categories %}
+                    <li class="pb-3">
+                        <a class="fix_hover collapsed d-flex justify-content-between h3 text-decoration-none" 
+                        id="categories"
+                        href="{% url 'shop.category' data.id %}">
+                            {{data.name}}
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>        
+        <div class="col-lg-9">
+            <div class="row">
+                <button type="button" class="btn_fix_filter" style="width: 100px" data-toggle="modal" data-target="#filterModal">
+                    <i class="fa-solid fa-filter"></i> Filter
+                </button>
+            </div>
+            <div class="row" id="root">
+            </div>
+        </div>
+
+        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="filterModalLabel">Bộ lọc</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button> 
+                </div>
+                  <form id="filterForm">
+                      {% csrf_token %}
+                      <div class="modal-body">
+                          <div class="filter-section">
+                              <span>Tình trạng sản phẩm</span>
+                              <div class="filter-options">
+                                  <div class="form-check">
+                                      <input class="form-check-input d-none" type="checkbox" value="out_of_stock" id="outOfStock" name="productStatus">
+                                      <label class="form-check-label" for="outOfStock">
+                                          Hiện sản phẩm hết hàng
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="filter-section">
+                              <span>Giá</span>
+                              <div class="price-range d-flex align-items-center">
+                                  <input type="number" class="form-control mr-2" placeholder="Min" name="minPrice">
+                                  <span>-</span>
+                                  <input type="number" class="form-control ml-2" placeholder="Max" name="maxPrice">
+                              </div>
+                          </div>
+                          {% for category, types in attributes_by_category.items %}
+                          <div class="filter-section">
+                              <h3>{{ category }}</h3>
+                              {% for attribute_type, attributes in types.items %}
+                              <div class="filter-section">
+                                  <span>{{ attribute_type }}</span>
+                                  <div class="filter-options">
+                                      {% for attribute in attributes %}
+                                          {% for value in attribute.values %}
+                                          <div class="form-check">
+                                              <input class="form-check-input d-none" type="checkbox" value="{{ value }}" id="{{ attribute.name }}-{{ value }}" name="{{ attribute.name }}">
+                                              <label class="form-check-label" for="{{ attribute.name }}-{{ value }}">
+                                                  {{ value }}
+                                              </label>
+                                          </div>
+                                          {% endfor %}
+                                      {% endfor %}
+                                  </div>
+                              </div>
+                              {% endfor %}
+                          </div>
+                          {% endfor %}
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                          <button type="button" class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                      </div>
+                  </form>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function renderData(data) {
+        const rootElement = document.getElementById('root');
+        // Clear existing products from the DOM
+        rootElement.innerHTML = '';
+        if (!data || data.products.length === 0) {
+            rootElement.innerHTML = 'Không có sản phẩm tương ứng';
+            return; // Exit the function if there is no data or no products
+        }
+        data.products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.classList.add('col-md-4');
+            productElement.innerHTML = `
+            <div class="card mb-4 product-wap rounded-0">
+                <div class="card rounded-0">
+                    <img class="card-img rounded-0 img-fluid" src="${product.image}" style="height: 300px;">
+                    <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                        <ul class="list-unstyled">
+                            <li><a class="btn btn-success text-white mt-2" href="${product.detail_url}"><i class="far fa-eye"></i></a></li>
+                            <li>
+                                <form action="${product.cart_store_url}" id="cart-form-${product.id}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-success text-white mt-2 submit-btn" id="submit-btn-${product.id}"><i class="fas fa-cart-plus"></i></button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <a href="${product.detail_url}" class="h3 text-decoration-none">${product.name}</a>
+                    <ul class="list-unstyled d-flex justify-content-center mb-1">
+                        <li>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-warning fa fa-star"></i> 
+                            <i class="text-warning fa fa-star"></i>
+                        </li>
+                    </ul>
+                    <p class="text-center mb-0">${product.price} VND</p>
+                </div>
+            </div>
+        `;
+        
+            rootElement.appendChild(productElement);
+        });
+    }
+    document.querySelectorAll('.form-check-label').forEach(label => {
+        label.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const checkbox = document.getElementById(this.htmlFor);
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('active', checkbox.checked);
+        });
+    });
+    
+    document.getElementById('applyFilters').addEventListener('click', function() {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken); 
+    
+        fetch('http://127.0.0.1:8000/apply_filters', {
+            method: 'POST',
+            body: formData
+        })        
+        .then(response => response.json())
+        .then(data => {
+            const closeButton = document.querySelector('#filterModal .close');
+            closeButton.click();
+            renderData(data);
+            form.reset();
+        })
+        .catch(error => console.log('Error:', error));
+    
+        const filters = {};
+        formData.forEach((value, key) => {
+            if (!filters[key]) {
+                filters[key] = [];
+            }
+            filters[key].push(value);
+        });
+    
+        console.log('Selected Filters:', filters);
+    });     
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const category_id = {{ category.id }};
+        const csrftoken = getCookie('csrftoken');
+        fetch(`http://127.0.0.1:8000/product_category/${category_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); 
+            renderData(data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+        
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('.submit-btn').on('click', function(event) {
+            var formId = $(this).attr('id').replace('submit-btn-', 'cart-form-');
+            $('#' + formId).submit(); 
+        });
+    });
+    
+</script>
+{% endblock %}

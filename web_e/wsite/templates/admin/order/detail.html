@@ -1,0 +1,39 @@
+{% extends "../base_admin.html" %}
+
+{% block title %}Order Detail{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Order Detail</h1>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in order_items %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ data.product }}</td>
+                            <td>{{ data.quantity }}</td>
+                            <td>{{ data.product.get_price }} VND</td>
+                            <td>{{ data.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <h3 class="mt-4 mb-3">Total Amount: <span style="color: #28a745;">{{ total_amount }} VND</span></h3>
+            <a href="{% url 'order.index' %}" class="btn btn-outline-primary">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
